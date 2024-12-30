@@ -2,7 +2,7 @@ import os
 import numpy as np
 from PIL import Image
 import math
-from tkinter import Tk, filedialog
+from tkinter import Tk, filedialog, messagebox
 
 def cargar_imagenes(route):
 
@@ -27,7 +27,7 @@ def cargar_imagenes(route):
             continue
         else:
             continue
-    print("Se cargaron", len(imagenes), "imágenes")
+    print("Se cargaron", len(imagenes), "imágenes\n")
     return imagenes
 
 def piezas(image, w, h):
@@ -142,7 +142,13 @@ def seleccionar_imagen():
 
     Tk().withdraw()  # Oculta la ventana raíz
     return Image.open(filedialog.askopenfilename(title="Selecciona una imagen",
-                                                 filetypes=[("Archivos de imagen", "*.png;*.jpg;*.jpeg;*.bmp;*.gif")]))
+                                                 filetypes=[("Archivos de imagen", "*.png;*.jpg;*.jpeg;*.bmp;*.tiff")]))
+
+def display_version():
+    # Crear la ventana principal oculta
+    Tk().withdraw()  # Ocultar la ventana principal
+    # Mostrar un pop-up con el mensaje
+    messagebox.showinfo("MOSAIC VERSION", "MOSAIC_V1.0 DISPLAYED")
 
 
 source = seleccionar_imagen()
@@ -152,10 +158,11 @@ miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 10, 10)
     # For example for a pictue of 2500 x 1875 use w:25, h:19 for 100 pixels.
     # For square pictures w=h
 
-Mosaic = construirMosaico(source, miniaturas, 80)
+Mosaic = construirMosaico(source, miniaturas, 40)
 Imagen = Image.fromarray(Mosaic)
+print("MOSAIC_V1.0 DISPLAYED")
 Imagen.show()
-
+display_version()
 
 
 #test3
