@@ -142,10 +142,21 @@ def seleccionar_imagen():
     Tk().withdraw()  # Oculta la ventana raíz
     return Image.open(filedialog.askopenfilename(title="Selecciona una imagen",
                                                  filetypes=[("Archivos de imagen", "*.png;*.jpg;*.jpeg;*.bmp;*.gif")]))
+
+def redimensionar():
+
+    """
+    Abre una ventana y seleccionas una imagen, se debe usar askopenfilename y no askopenfile porque si no da error
+    """
+    return 0
+
 source = seleccionar_imagen()
+
+    #It is recommended to adjust the dimensions of the source images and the pixels of the resulting image
+
 miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 10, 10)
-Mosaico = construirMosaico(source, miniaturas, 56)
-Imagen = Image.fromarray(Mosaico)
+Mosaic = construirMosaico(source, miniaturas, 56)
+Imagen = Image.fromarray(Mosaic)
 Imagen.show()
 
 

@@ -109,11 +109,13 @@ def seleccionar_imagen():
 
 
 source = seleccionar_imagen()
-miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 10, 10)
-Mosaico = construirMosaico(source, miniaturas, 56)
-Imagen = Image.fromarray(Mosaico)
-Imagen.show()
 
+    #It is recommended to adjust the dimensions of the source images and the pixels of the resulting image
+
+miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 10, 10)
+Mosaic = construirMosaico(source, miniaturas, 56)
+Imagen = Image.fromarray(Mosaic)
+Imagen.show()
 # Este es el que tiene mayor definicion la imagen, pero se ven menos los colores
 # Se logra definir la imagen
 # utiliza la suma de la distancias L1 y L2. L2 = distancia de color, L1 = luminancia brillo de color
