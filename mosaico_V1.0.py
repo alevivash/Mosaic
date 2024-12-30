@@ -66,6 +66,14 @@ def unir(lista_de_miniaturas, w_miniatura, h_miniatura):
         blanco.paste(lista_de_miniaturas[i], (coordenadas[i][0], coordenadas[i][1]))
     return np.array(blanco, dtype=np.uint8)
 
+def L1_Luminance_Color(a, b):
+    """
+    Calcula una combinación de la diferencia de color y luminancia, normalizando los valores.
+    """
+    color_distance = np.sum(np.abs(a - b)) / np.size(a)
+    luminance_distance = abs(np.mean(a) - np.mean(b))
+    return color_distance + luminance_distance
+
 def escogerMiniatura(bloque, lista_miniaturas):
     """
     Compara un bloque de una imagen source con una lista de imagenes,
@@ -74,6 +82,13 @@ def escogerMiniatura(bloque, lista_miniaturas):
     candidatos = [L1_Luminance_Color(bloque, miniatura) for miniatura in lista_miniaturas]
     index = np.argmin(candidatos)
     return index
+
+def pixel_alert():
+
+    """
+        Prevents the same source image for nearby pixels
+    """
+    return 0
 
 def listaRedim(A, w, h):
     """
@@ -93,13 +108,6 @@ def vecinoProximo(A, w, h):
                   for x in range(w)] for y in range(h)]
     return np.array(new_image)
 
-def L1_Luminance_Color(a, b):
-    """
-    Calcula una combinación de la diferencia de color y luminancia, normalizando los valores.
-    """
-    color_distance = np.sum(np.abs(a - b)) / np.size(a)
-    luminance_distance = abs(np.mean(a) - np.mean(b))
-    return color_distance + luminance_distance
 
 def initMosaico(source, w, h, p):
     mAltura, mAncho = h * p, w * p
@@ -143,19 +151,15 @@ def seleccionar_imagen():
     return Image.open(filedialog.askopenfilename(title="Selecciona una imagen",
                                                  filetypes=[("Archivos de imagen", "*.png;*.jpg;*.jpeg;*.bmp;*.gif")]))
 
-def redimensionar():
 
-    """
-    Abre una ventana y seleccionas una imagen, se debe usar askopenfilename y no askopenfile porque si no da error
-    """
-    return 0
-
-source = seleccionar_imagen()
-
+#source = seleccionar_imagen()
+source = Image.open("Killua.jpg")
     #It is recommended to adjust the dimensions of the source images and the pixels of the resulting image
 
-miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 10, 10)
-Mosaic = construirMosaico(source, miniaturas, 56)
+#miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 20, 20)
+miniaturas = listaRedim(cargar_imagenes(r"C:\Projects\USB\Python\Mosaico\imagenes"), 10, 10)
+
+Mosaic = construirMosaico(source, miniaturas, 25)
 Imagen = Image.fromarray(Mosaic)
 Imagen.show()
 
