@@ -1,6 +1,7 @@
 import os
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageTk
+import cv2
 import math
 from tkinter import Tk, filedialog, messagebox
 
@@ -150,7 +151,6 @@ def display_version():
     # Mostrar un pop-up con el mensaje
     messagebox.showinfo("MOSAIC VERSION", "MOSAIC_V1.0 DISPLAYED")
 
-
 source = seleccionar_imagen()
 miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 10, 10)
 
@@ -162,7 +162,6 @@ Mosaic = construirMosaico(source, miniaturas, 40)
 Imagen = Image.fromarray(Mosaic)
 print("MOSAIC_V1.0 DISPLAYED")
 Imagen.show()
-display_version()
 
 
 #test3
