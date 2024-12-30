@@ -149,7 +149,7 @@ Imagen = Image.fromarray(Mosaico)
 Imagen.show()
 
 
-#test
+#test2
 
 # Mayor relacion color definicion de todas
 # El rango de colores opaca considerablemente la definicion de la imagen
