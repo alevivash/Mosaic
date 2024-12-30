@@ -148,6 +148,9 @@ Mosaico = construirMosaico(source, miniaturas, 56)
 Imagen = Image.fromarray(Mosaico)
 Imagen.show()
 
+
+#test
+
 # Mayor relacion color definicion de todas
 # El rango de colores opaca considerablemente la definicion de la imagen
 #Se podria decir que es la mejor pero se puede mejorar
