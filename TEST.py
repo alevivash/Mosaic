@@ -172,19 +172,35 @@ def construirMosaico(source, miniaturas, p):
 
     return np.array(mosaico, dtype=np.uint8)
 
+def seleccionar_carpeta():
+
+    """
+    Abre una ventana y seleccionas una carpeta, la cual debe contener a las imagenes
+    """
+    Tk().withdraw()  # Oculta la ventana raíz
+    return filedialog.askdirectory(title="Selecciona una carpeta")
+
+def seleccionar_imagen():
+    """
+    Abre una ventana y seleccionas una imagen, se debe usar askopenfilename y no askopenfile porque si no da error
+    """
+
+    Tk().withdraw()  # Oculta la ventana raíz
+    return Image.open(filedialog.askopenfilename(title="Selecciona una imagen",
+                                                 filetypes=[("Archivos de imagen", "*.png;*.jpg;*.jpeg;*.bmp;*.gif")]))
 
 
 
-#source = seleccionar_imagen()
-source = Image.open("Killua.jpg")
+source = seleccionar_imagen()
+
     #It is recommended to adjust the dimensions of the source images and the pixels of the resulting image
+    #For example for a pictue of 2500 x 1875 use w:25, h:19 for 100 pixels.
 
-
-
-#miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 20, 20)
-miniaturas = listaRedim(cargar_imagenes(r"C:\Projects\USB\Python\Mosaico\imagenes"), 5, 5)
-
-
-Mosaic = construirMosaico(source, miniaturas, 70)
+miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 20, 20)
+Mosaic = construirMosaico(source, miniaturas, 100)
 Imagen = Image.fromarray(Mosaic)
 Imagen.show()
+
+#   Nueva version Mosaico V1 con nueva funcion
+#   Se agrega funcion, segunda miniatura que modifica construirmosaico para evitar que se repitan tantas miniaturas
+#   Toma encuenta tanto distancia de color como luminancia (brillo). por eso hay color

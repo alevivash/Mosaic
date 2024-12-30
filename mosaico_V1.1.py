@@ -179,13 +179,16 @@ def seleccionar_imagen():
 
 
 source = seleccionar_imagen()
-
-    #It is recommended to adjust the dimensions of the source images and the pixels of the resulting image
-
 miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 10, 10)
-Mosaic = construirMosaico(source, miniaturas, 56)
+
+    # It is recommended to adjust the dimensions of the source images and the pixels of the resulting image
+    # For example for a pictue of 2500 x 1875 use w:25, h:19 for 100 pixels.
+    # For square pictures w=h
+
+Mosaic = construirMosaico(source, miniaturas, 80)
 Imagen = Image.fromarray(Mosaic)
 Imagen.show()
+
 #Se logra tener una imagen definida pero los colores tienden a ser opacos y grisaseos
 #al tener sobreexposicion de luminosidad arroja el bloque mas luminoso sin importar el color
 # A pesar de las cosas, me gusta el estilo de la imagen grisaseo, se ve caotico pero ordenado a la vez

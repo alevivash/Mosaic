@@ -83,13 +83,6 @@ def escogerMiniatura(bloque, lista_miniaturas):
     index = np.argmin(candidatos)
     return index
 
-def pixel_alert():
-
-    """
-        Prevents the same source image for nearby pixels
-    """
-    return 0
-
 def listaRedim(A, w, h):
     """
     Cambia la altura y el ancho de una lista de imágenes del mismo tamaño por medio de la función vecinoProximo
@@ -152,16 +145,17 @@ def seleccionar_imagen():
                                                  filetypes=[("Archivos de imagen", "*.png;*.jpg;*.jpeg;*.bmp;*.gif")]))
 
 
-#source = seleccionar_imagen()
-source = Image.open("Killua.jpg")
-    #It is recommended to adjust the dimensions of the source images and the pixels of the resulting image
+source = seleccionar_imagen()
+miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 10, 10)
 
-#miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 20, 20)
-miniaturas = listaRedim(cargar_imagenes(r"C:\Projects\USB\Python\Mosaico\imagenes"), 10, 10)
+    # It is recommended to adjust the dimensions of the source images and the pixels of the resulting image
+    # For example for a pictue of 2500 x 1875 use w:25, h:19 for 100 pixels.
+    # For square pictures w=h
 
-Mosaic = construirMosaico(source, miniaturas, 25)
+Mosaic = construirMosaico(source, miniaturas, 80)
 Imagen = Image.fromarray(Mosaic)
 Imagen.show()
+
 
 
 #test3
