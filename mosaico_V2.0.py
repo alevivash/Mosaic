@@ -185,15 +185,15 @@ def display_version():
 
 
 source = seleccionar_imagen()
-miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 10, 10)
+miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 6, 9)
 
     # It is recommended to adjust the dimensions of the source images and the pixels of the resulting image
     # For example for a pictue of 2500 x 1875 use w:25, h:19 for 100 pixels.
     # For square pictures w=h
 
-Mosaic = construirMosaico(source, miniaturas, 40)
+Mosaic = construirMosaico(source, miniaturas, 100)
 Imagen = Image.fromarray(Mosaic)
-print("MOSAIC_V2.0 DISPLAYED")
+print("MOSAIC_V1.0 DISPLAYED")
 Imagen.show()
 
 #Se logra tener una imagen definida pero los colores tienden a ser opacos y grisaseos

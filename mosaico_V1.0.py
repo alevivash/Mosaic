@@ -152,19 +152,18 @@ def display_version():
     messagebox.showinfo("MOSAIC VERSION", "MOSAIC_V1.0 DISPLAYED")
 
 source = seleccionar_imagen()
-miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 10, 10)
+miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 6, 9)
 
     # It is recommended to adjust the dimensions of the source images and the pixels of the resulting image
     # For example for a pictue of 2500 x 1875 use w:25, h:19 for 100 pixels.
     # For square pictures w=h
 
-Mosaic = construirMosaico(source, miniaturas, 40)
+Mosaic = construirMosaico(source, miniaturas, 100)
 Imagen = Image.fromarray(Mosaic)
 print("MOSAIC_V1.0 DISPLAYED")
 Imagen.show()
 
 
-#test3
 
 # Mayor relacion color definicion de todas
 # El rango de colores opaca considerablemente la definicion de la imagen

@@ -121,7 +121,7 @@ miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 10, 10)
     # For example for a pictue of 2500 x 1875 use w:25, h:19 for 100 pixels.
     # For square pictures w=h
 
-Mosaic = construirMosaico(source, miniaturas, 40)
+Mosaic = construirMosaico(source, miniaturas, 100)
 Imagen = Image.fromarray(Mosaic)
 print("MOSAIC_V3.0 DISPLAYED")
 Imagen.show()
