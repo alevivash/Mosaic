@@ -4,16 +4,16 @@ from PIL import Image
 import math
 from tkinter import Tk, filedialog, messagebox
 
-def cargar_imagenes(route):
+def load_images(route):
 
     """
-    Carga imagenes en una carpeta, la cual transformara en matrices numpy
-    y los devolvera en una lista
-    route -> direccion absoluta donde se encuentran las imagenes
-    images -> lista de matrices de numpy ndarray
+    Loads images from a folder, converts them to numpy arrays,
+    and returns them as a list.
+    route -> absolute path where the images are located
+    images -> list of numpy ndarray matrices
     """
 
-    imagenes = []
+    images = []
     directory = os.fsencode(route)
     os.chdir(route)
     for file in os.listdir(directory):
@@ -23,190 +23,180 @@ def cargar_imagenes(route):
             img.load()
             data = np.asarray(img, dtype="uint8")
             print(data.shape)
-            imagenes.append(data)
+            images.append(data)
             continue
         else:
             continue
-    print("Se cargaron", len(imagenes), "imágenes")
-    return imagenes
+    print("Loaded", len(images), "images")
+    return images
 
-def piezas(image, w, h):
+def pieces(image, w, h):
 
     """
-    Esta función se encarga de cortar una imagen (np.array) en partes, si las dimensiones de la imagenes miniaturas son divisibles entre las dimensiones de la imagen source.
-    Devuelve una lista de imágenes con las partes
+    This function splits an image (np.array) into pieces, if the dimensions of the thumbnail images
+    are divisible by the dimensions of the source image.
+    Returns a list of images with the pieces.
     """
 
     image = Image.fromarray(image)
     width, height = image.size
-    partes = []
+    parts = []
     for x in range(0, width, w):
         for y in range(0, height, h):
-            partes.append((x, y, x + w, y + h))
-    for i in range(len(partes)):
-        partes[i] = image.crop(partes[i])
-        partes[i] = np.array(partes[i])
-    return partes
+            parts.append((x, y, x + w, y + h))
+    for i in range(len(parts)):
+        parts[i] = image.crop(parts[i])
+        parts[i] = np.array(parts[i])
+    return parts
 
-def unir(lista_de_miniaturas, w_miniatura, h_miniatura):
+def merge(thumbnail_list, w_thumbnail, h_thumbnail):
 
     """
-    Este código se encarga de unir una lista de imagenes de w_miniatura de ancho, por h_miniaturas de alto.
+    This code merges a list of images of width w_thumbnail and height h_thumbnail.
     """
 
-    for i in range(len(lista_de_miniaturas)):       ##Convierte tu lista de np.array de imagenes a formato PIL (image.fromarray)
-        lista_de_miniaturas[i] = Image.fromarray(lista_de_miniaturas[i])
-    p = int(round(math.sqrt(len(lista_de_miniaturas))))
-    blanco = Image.new(size=(w_miniatura * p, h_miniatura * p), mode="RGB")    # Crea una base en donde pegar las images
-    coordenadas = []
-    for x in range(0, blanco.size[0], w_miniatura):
-        for y in range(0, blanco.size[1], h_miniatura):
-            coordenadas.append((x, y, x + w_miniatura, y + h_miniatura))
-    for i in range(len(lista_de_miniaturas)):      # Pega las imagenes en la base
-        blanco.paste(lista_de_miniaturas[i], (coordenadas[i][0], coordenadas[i][1]))
-    return np.array(blanco, dtype=np.uint8)
+    for i in range(len(thumbnail_list)):       ##Convert your list of np.array images to PIL format (image.fromarray)
+        thumbnail_list[i] = Image.fromarray(thumbnail_list[i])
+    p = int(round(math.sqrt(len(thumbnail_list))))
+    white = Image.new(size=(w_thumbnail * p, h_thumbnail * p), mode="RGB")    # Creates a base to paste the images
+    coordinates = []
+    for x in range(0, white.size[0], w_thumbnail):
+        for y in range(0, white.size[1], h_thumbnail):
+            coordinates.append((x, y, x + w_thumbnail, y + h_thumbnail))
+    for i in range(len(thumbnail_list)):      # Paste the images onto the base
+        white.paste(thumbnail_list[i], (coordinates[i][0], coordinates[i][1]))
+    return np.array(white, dtype=np.uint8)
 
 def L1_Luminance_Color(a, b):
     """
-    Calcula una combinación de la diferencia de color y luminancia, normalizando los valores.
+    Calculates a combination of the color difference and luminance, normalizing the values.
     """
     color_distance = np.sum(np.abs(a - b)) / np.size(a)
     luminance_distance = abs(np.mean(a) - np.mean(b))
     return color_distance + luminance_distance
 
-def escogerMiniatura(bloque, lista_miniaturas):
+def chooseThumbnail(block, thumbnail_list):
     """
-    Compara un bloque de una imagen source con una lista de imagenes,
-    usando la función L1 para obtener el valor más parecido (mínima diferencia)
+    Compares a block of a source image with a list of images,
+    using the L1 function to find the most similar (minimum difference)
     """
-    candidatos = [L1_Luminance_Color(bloque, miniatura) for miniatura in lista_miniaturas]
-    index = np.argmin(candidatos)
+    candidates = [L1_Luminance_Color(block, thumbnail) for thumbnail in thumbnail_list]
+    index = np.argmin(candidates)
     return index
 
-
-def escogerSegundaMiniatura(bloque, lista_miniaturas):
+def chooseSecondThumbnail(block, thumbnail_list):
     """
-    Compara un bloque de una imagen source con una lista de imágenes,
-    usando la función L1 para obtener el índice de la segunda imagen más parecida.
+    Compares a block of a source image with a list of images,
+    using the L1 function to get the index of the second most similar image.
     """
-    # Calculamos las diferencias con todas las miniaturas
-    candidatos = [L1_Luminance_Color(bloque, miniatura) for miniatura in lista_miniaturas]
+    # Calculate differences with all thumbnails
+    candidates = [L1_Luminance_Color(block, thumbnail) for thumbnail in thumbnail_list]
 
-    # Encontramos el índice del valor más pequeño (más parecido)
-    index_primero = np.argmin(candidatos)
+    # Find the index of the smallest value (most similar)
+    first_index = np.argmin(candidates)
 
-    # Reemplazamos el valor más pequeño con un número muy grande temporalmente
-    candidatos[index_primero] = float('inf')
+    # Temporarily replace the smallest value with a very large number
+    candidates[first_index] = float('inf')
 
-    # Encontramos el índice del segundo valor más pequeño
-    index_segundo = np.argmin(candidatos)
+    # Find the index of the second smallest value
+    second_index = np.argmin(candidates)
 
-    return index_segundo
+    return second_index
 
-
-def pixel_alert():
-
+def resizeList(A, w, h):
     """
-        Prevents the same source image for nearby pixels
-    """
-    return 0
-
-def listaRedim(A, w, h):
-    """
-    Cambia la altura y el ancho de una lista de imágenes del mismo tamaño por medio de la función vecinoProximo
-    anteriormente nombrada
+    Changes the height and width of a list of images of the same size
+    using the previously defined nearestNeighbor function
     """
     for i in range(len(A)):
-        A[i] = vecinoProximo(A[i], w, h)
+        A[i] = nearestNeighbor(A[i], w, h)
     return A
 
-def vecinoProximo(A, w, h):
+def nearestNeighbor(A, w, h):
     """
-    Toma las dimensiones de la imagen A y las divide entre las nuevas dimensiones dadas, w y h. A través de un bucle for
+    Takes the dimensions of image A and divides them by the new given dimensions, w and h, using a for loop.
     """
-    altura, ancho = A.shape[0], A.shape[1]
-    new_image = [[A[int(altura * y / h)][int(ancho * x / w)]
+    height, width = A.shape[0], A.shape[1]
+    new_image = [[A[int(height * y / h)][int(width * x / w)]
                   for x in range(w)] for y in range(h)]
     return np.array(new_image)
 
+def initMosaic(source, w, h, p):
+    mHeight, mWidth = h * p, w * p
+    return nearestNeighbor(source, mWidth, mHeight)
 
-def initMosaico(source, w, h, p):
-    mAltura, mAncho = h * p, w * p
-    return vecinoProximo(source, mAncho, mAltura)
-
-def construirMosaico(source, miniaturas, p):
+def constructMosaic(source, thumbnails, p):
 
     """
-    Construye una imagen como un mapa de bits de dos dimensiones (escala de grises) con una imagen base(source),
-    una lista de miniaturas y la cantidad de miniaturas por lado (p).
-
+    Builds an image as a 2D bitmap (grayscale) from a base image (source),
+    a list of thumbnails, and the number of thumbnails per side (p).
     """
 
     source = np.array(source)
-    for i in range(len(miniaturas)):
-        miniaturas[i] = np.array(miniaturas[i])
-    ejemplar = miniaturas[0]
-    h, w, _ = ejemplar.shape
-    source = initMosaico(source, w, h, p)
-    bloques = piezas(source, w, h)  # Corta en bloques la imagen original(source)
+    for i in range(len(thumbnails)):
+        thumbnails[i] = np.array(thumbnails[i])
+    sample = thumbnails[0]
+    h, w, _ = sample.shape
+    source = initMosaic(source, w, h, p)
+    blocks = pieces(source, w, h)  # Splits the original image (source) into blocks
     area = pow(p, 2)
 
     indices = []
     past_index = 0
-    for bloque in bloques:
+    for block in blocks:
 
-        index = escogerMiniatura(bloque, miniaturas)
+        index = chooseThumbnail(block, thumbnails)
 
         while index == past_index:
 
-             index = escogerSegundaMiniatura(bloque, miniaturas)
+             index = chooseSecondThumbnail(block, thumbnails)
 
         past_index = index
 
         indices.append(index)
 
-    # Compara cada bloque con todos las imagenes miniatura y selecciona el orden el más parecido para cada bloque
+    # Compares each block with all the thumbnail images and selects the most similar for each block
 
-    elegidas = [miniaturas[i] for i in indices] # las ordena
-    mosaico = unir(elegidas, w, h)   # Une las elegidas y retorna el mosaico de imagenes
+    selected = [thumbnails[i] for i in indices] # orders them
+    mosaic = merge(selected, w, h)   # Merges the selected ones and returns the image mosaic
 
-    return np.array(mosaico, dtype=np.uint8)
+    return np.array(mosaic, dtype=np.uint8)
 
-def seleccionar_carpeta():
-
+def select_folder():
     """
-    Abre una ventana y seleccionas una carpeta, la cual debe contener a las imagenes
+    Opens a window to select a folder, which should contain the images
     """
-    Tk().withdraw()  # Oculta la ventana raíz
-    return filedialog.askdirectory(title="Selecciona una carpeta")
+    Tk().withdraw()  # Hides the root window
+    return filedialog.askdirectory(title="Select a folder")
 
-def seleccionar_imagen():
+def select_image():
     """
-    Abre una ventana y seleccionas una imagen, se debe usar askopenfilename y no askopenfile porque si no da error
+    Opens a window to select an image, using askopenfilename instead of askopenfile to avoid errors
     """
 
-    Tk().withdraw()  # Oculta la ventana raíz
-    return Image.open(filedialog.askopenfilename(title="Selecciona una imagen",
-                                                 filetypes=[("Archivos de imagen", "*.png;*.jpg;*.jpeg;*.bmp;*.tiff")]))
+    Tk().withdraw()  # Hides the root window
+    return Image.open(filedialog.askopenfilename(title="Select an image",
+                                                 filetypes=[("Image files", "*.png;*.jpg;*.jpeg;*.bmp;*.tiff")]))
 
 def display_version():
-    # Crear la ventana principal oculta
-    Tk().withdraw()  # Ocultar la ventana principal
-    # Mostrar un pop-up con el mensaje
+    # Create the hidden main window
+    Tk().withdraw()  # Hide the main window
+    # Show a pop-up with the message
     messagebox.showinfo("MOSAIC VERSION", "MOSAIC_V1.1 DISPLAYED")
 
 
-source = seleccionar_imagen()
-miniaturas = listaRedim(cargar_imagenes((seleccionar_carpeta())), 6, 9)
+source = select_image()
+miniatures = resizeList(load_images((select_folder())), 10, 10)
 
     # It is recommended to adjust the dimensions of the source images and the pixels of the resulting image
-    # For example for a pictue of 2500 x 1875 use w:25, h:19 for 100 pixels.
-    # For square pictures w=h
+    # For example, for a picture of 2500 x 1875, use w:25, h:19 for 100 pixels.
+    # For square pictures, w=h
 
-Mosaic = construirMosaico(source, miniaturas, 100)
-Imagen = Image.fromarray(Mosaic)
-print("MOSAIC_V1.0 DISPLAYED")
-Imagen.show()
+Mosaic = constructMosaic(source, miniatures, 50)
+Image_Result = Image.fromarray(Mosaic)
+print("MOSAIC_V1.1 DISPLAYED")
+Image_Result.show()
+
 
 #   Nueva version Mosaico V1 con nueva funcion
 #   Se agrega funcion, segunda miniatura que modifica construirmosaico para evitar que se repitan tantas miniaturas
