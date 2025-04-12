@@ -3,7 +3,7 @@ import os, random
 
 os.makedirs("colors", exist_ok=True)
 
-for i in range(225):
+for i in range(350):
     # Crear imagen y objeto para dibujar
     img = Image.new("RGB", (600, 600))
     draw = ImageDraw.Draw(img)
@@ -21,8 +21,8 @@ for i in range(225):
 
     # 2. Dibujar círculos concéntricos
     center_x, center_y = 300, 300  # Centro de la imagen (600x600)
-    max_radius = 300# Radio máximo (ajustable)
-    num_circles = 15 # Número de círculos concéntricos
+    max_radius = 250# Radio máximo (ajustable)
+    num_circles = 9# Número de círculos concéntricos
 
     for circle in range(1, num_circles + 1):
         radius = int(max_radius * circle / num_circles)  # Radio actual
@@ -30,7 +30,7 @@ for i in range(225):
         x1, y1 = center_x - radius, center_y - radius
         x2, y2 = center_x + radius, center_y + radius
         # Color del círculo (negro en este caso)
-        draw.ellipse([(x1, y1), (x2, y2)], outline=(0, 0, 0), width=3)
+        draw.ellipse([(x1, y1), (x2, y2)], outline=(0, 0, 0), width=1)
 
     # Guardar imagen
     img.save(f"colors/color_gradient_noise_{i}.jpg")

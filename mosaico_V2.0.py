@@ -150,13 +150,13 @@ def display_version():
 
 
 source = select_image()
-miniatures = resizeList(load_images((select_folder())), 10, 10)
+miniatures = resizeList(load_images((select_folder())), 6, 6)
 
     # It is recommended to adjust the dimensions of the source images and the pixels of the resulting image
     # For example, for a picture of 2500 x 1875, use w:25, h:19 for 100 pixels.
     # For square pictures, w=h
 
-Mosaic = construct_mosaic(source, miniatures, 50)
+Mosaic = construct_mosaic(source, miniatures, 250)
 Imagen = Image.fromarray(Mosaic)
 print("MOSAIC_V1.0 DISPLAYED")
 Imagen.show()
