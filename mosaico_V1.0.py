@@ -148,7 +148,7 @@ miniatures = resize_list(load_images(select_folder()), 10, 10)
 # For example, for a picture of 2500 x 1875 use w:25, h:19 for 100 pixels.
 # For square pictures, w=h
 
-Mosaic = construct_mosaic(source, miniatures, 50)
+Mosaic = construct_mosaic(source, miniatures, 200)
 Image_result = Image.fromarray(Mosaic)
 print("MOSAIC_V1.0 DISPLAYED")
 Image_result.show()

@@ -143,7 +143,7 @@ def display_version():
 
 
 source = select_image()
-miniatures = resizeList(load_images((select_folder())), 10, 10)
+miniatures = resizeList(load_images((select_folder())), 15, 15)
 
     # It is recommended to adjust the dimensions of the source images and the pixels of the resulting image
     # For example, for a picture of 2500 x 1875, use w:25, h:19 for 100 pixels.
